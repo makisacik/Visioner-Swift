@@ -44,7 +44,6 @@ struct TemplateCardView: View {
             TemplatePreviewView(template: template)
                 .frame(height: 120)
                 .background(theme.secondary.opacity(0.3))
-                .cornerRadius(12)
             
             // Template name
             Text(template.name)
@@ -59,8 +58,6 @@ struct TemplateCardView: View {
         }
         .padding(12)
         .background(theme.secondary.opacity(0.1))
-        .cornerRadius(16)
-        .shadow(color: theme.shadow, radius: 4, x: 0, y: 2)
     }
 }
 

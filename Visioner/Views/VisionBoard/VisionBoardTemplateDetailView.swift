@@ -51,7 +51,6 @@ struct TemplateVisualizationView: View {
                 Rectangle()
                     .fill(theme.background)
                     .cornerRadius(16)
-                    .shadow(color: theme.shadow, radius: 8, x: 0, y: 4)
                 
                 // Grid slots
                 ForEach(template.slots) { slot in
@@ -91,26 +90,19 @@ struct SlotView: View {
             // Slot background
             Rectangle()
                 .fill(slot.type == .image ? theme.accent.opacity(0.1) : theme.accentStrong.opacity(0.1))
-                .overlay(
-                    Rectangle()
-                        .stroke(theme.accent.opacity(0.3), lineWidth: 2)
-                )
-                .cornerRadius(8)
             
             // Content based on slot type
             if slot.type == .image {
                 Image(placeholderImageName)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: rect.width - 8, height: rect.height - 8)
+                    .frame(width: rect.width, height: rect.height)
                     .clipped()
-                    .cornerRadius(6)
             } else {
                 Text("I am manifesting\nabundance")
                     .font(.appBody)
                     .foregroundColor(theme.textPrimary)
                     .multilineTextAlignment(.center)
-                    .padding(8)
             }
             
             // Debug overlay
