@@ -13,31 +13,31 @@ struct ContentView: View {
     @EnvironmentObject private var onboardingManager: OnboardingManager
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \VisionBoardEntity.createdDate, ascending: false)],
         animation: .default)
-    private var items: FetchedResults<Item>
+    private var boards: FetchedResults<VisionBoardEntity>
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
+                ForEach(boards) { board in
                     NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                        Text("Board: \(board.title ?? "Untitled")")
                             .font(.appBody)
                     } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+                        Text(board.title ?? "Untitled")
                             .font(.appBody)
                     }
                 }
-                .onDelete(perform: deleteItems)
+                .onDelete(perform: deleteBoards)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
                 ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                    Button(action: addBoard) {
+                        Label("Add Board", systemImage: "plus")
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -70,10 +70,13 @@ struct ContentView: View {
         }
     }
 
-    private func addItem() {
+    private func addBoard() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let newBoard = VisionBoardEntity(context: viewContext)
+            newBoard.id = UUID()
+            newBoard.title = "New Vision Board"
+            newBoard.templateId = "sample"
+            newBoard.createdDate = Date()
 
             do {
                 try viewContext.save()
@@ -86,9 +89,9 @@ struct ContentView: View {
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
+    private func deleteBoards(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { boards[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()

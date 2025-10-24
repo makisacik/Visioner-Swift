@@ -14,10 +14,13 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
+        // Create sample vision board for preview
+        let sampleBoard = VisionBoardEntity(context: viewContext)
+        sampleBoard.id = UUID()
+        sampleBoard.templateId = "preview"
+        sampleBoard.title = "Sample Vision Board"
+        sampleBoard.createdDate = Date()
+        
         do {
             try viewContext.save()
         } catch {

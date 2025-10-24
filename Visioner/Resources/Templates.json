@@ -129,5 +129,185 @@
       "accentColorHex": "#FFC0CB",
       "fontName": "Inter 28pt Light"
     }
+  },
+  {
+    "id": "iphone_layout",
+    "name": "iPhone Layout",
+    "gridSize": { "width": 6, "height": 10 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 1, "y": 1, "width": 4, "height": 3 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 0, "y": 4, "width": 2, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 2, "y": 4, "width": 2, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 4,
+        "rect": { "x": 4, "y": 4, "width": 2, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 5,
+        "rect": { "x": 0, "y": 6, "width": 6, "height": 2 },
+        "type": "text"
+      },
+      {
+        "id": 6,
+        "rect": { "x": 1, "y": 8, "width": 4, "height": 2 },
+        "type": "image"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#F0F8FF",
+      "accentColorHex": "#4A90E2",
+      "fontName": "SF Pro Display"
+    }
+  },
+  {
+    "id": "story_format",
+    "name": "Story Format",
+    "gridSize": { "width": 8, "height": 12 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 0, "y": 0, "width": 8, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 1, "y": 4, "width": 6, "height": 2 },
+        "type": "text"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 0, "y": 6, "width": 3, "height": 3 },
+        "type": "image"
+      },
+      {
+        "id": 4,
+        "rect": { "x": 3, "y": 6, "width": 3, "height": 3 },
+        "type": "image"
+      },
+      {
+        "id": 5,
+        "rect": { "x": 6, "y": 6, "width": 2, "height": 3 },
+        "type": "image"
+      },
+      {
+        "id": 6,
+        "rect": { "x": 0, "y": 9, "width": 8, "height": 3 },
+        "type": "text"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#FFF8DC",
+      "accentColorHex": "#FFB347",
+      "fontName": "Helvetica Neue"
+    }
+  },
+  {
+    "id": "square_perfect",
+    "name": "Square Perfect",
+    "gridSize": { "width": 8, "height": 8 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 0, "y": 0, "width": 4, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 4, "y": 0, "width": 4, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 0, "y": 4, "width": 4, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 4,
+        "rect": { "x": 4, "y": 4, "width": 4, "height": 4 },
+        "type": "text"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#F5F5DC",
+      "accentColorHex": "#DDA0DD",
+      "fontName": "Georgia"
+    }
+  },
+  {
+    "id": "medium_widget",
+    "name": "Medium Widget",
+    "gridSize": { "width": 6, "height": 4 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 0, "y": 0, "width": 3, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 3, "y": 0, "width": 3, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 0, "y": 2, "width": 6, "height": 2 },
+        "type": "text"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#E6E6FA",
+      "accentColorHex": "#9370DB",
+      "fontName": "Avenir Next"
+    }
+  },
+  {
+    "id": "large_widget",
+    "name": "Large Widget",
+    "gridSize": { "width": 8, "height": 4 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 0, "y": 0, "width": 4, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 4, "y": 0, "width": 4, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 0, "y": 2, "width": 2, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 4,
+        "rect": { "x": 2, "y": 2, "width": 4, "height": 2 },
+        "type": "text"
+      },
+      {
+        "id": 5,
+        "rect": { "x": 6, "y": 2, "width": 2, "height": 2 },
+        "type": "image"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#F0FFF0",
+      "accentColorHex": "#90EE90",
+      "fontName": "Optima"
+    }
   }
 ]

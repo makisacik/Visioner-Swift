@@ -9,6 +9,7 @@ import SwiftUI
 
 struct VisionBoardTemplateDetailView: View {
     let template: VisionBoardTemplate
+    @StateObject private var visionBoardService = VisionBoardService.shared
     
     var body: some View {
         ScrollView {
@@ -20,19 +21,62 @@ struct VisionBoardTemplateDetailView: View {
                     .multilineTextAlignment(.center)
                     .padding(.top)
                 
-                // Template visualization
+                // Inspiring subtitle
+                Text("Choose the frame for your dreams")
+                    .font(.appSecondary)
+                    .foregroundColor(theme.textSecondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+
+                // Template visualization with proper aspect ratio
                 TemplateVisualizationView(template: template)
+                    .aspectRatio(template.cgGridSize.width / template.cgGridSize.height, contentMode: .fit)
+                    .frame(maxHeight: 300) // Maximum height to prevent overly tall cards
                     .padding(.horizontal, 10)
-                
+
+                // Create board CTA - now properly below the image
+                createBoardButton
+                    .padding(.horizontal)
+
                 // Template info
                 TemplateInfoView(template: template)
                     .padding(.horizontal)
-                
+
+                // Debug details card
+                DebugDetailsCard(template: template)
+                    .padding(.horizontal)
+
                 Spacer(minLength: 20)
             }
         }
         .background(theme.background)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    // MARK: - Create Board Button
+
+    private var createBoardButton: some View {
+        NavigationLink(destination: createBoardDestination) {
+            HStack(spacing: 12) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 18, weight: .medium))
+
+                Text("Create My Vision Board")
+                    .font(.appButton)
+            }
+            .foregroundColor(theme.background)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(theme.accent)
+            .cornerRadius(12)
+            .shadow(color: theme.shadow, radius: 4, x: 0, y: 2)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+
+    private var createBoardDestination: some View {
+        let board = visionBoardService.createBoard(from: template, title: "\(template.name) Vision")
+        return VisionBoardEditorView(board: board, template: template)
     }
 }
 
@@ -41,16 +85,15 @@ struct TemplateVisualizationView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let availableWidth = geometry.size.width // Use full width
+            let availableWidth = geometry.size.width
             let cellWidth = availableWidth / template.cgGridSize.width
-            let cellHeight = cellWidth // Make cells square for proper proportions
+            let cellHeight = cellWidth
             let totalHeight = cellHeight * template.cgGridSize.height
             
             ZStack {
                 // Background
                 Rectangle()
                     .fill(theme.background)
-                    .cornerRadius(16)
                 
                 // Grid slots
                 ForEach(template.slots) { slot in
@@ -70,6 +113,8 @@ struct TemplateVisualizationView: View {
                 }
             }
             .frame(width: availableWidth, height: totalHeight)
+            .cornerRadius(16) // Apply corner radius to the entire board
+            .clipped() // Ensure content doesn't overflow
         }
     }
 }
@@ -103,29 +148,12 @@ struct SlotView: View {
                     .font(.appBody)
                     .foregroundColor(theme.textPrimary)
                     .multilineTextAlignment(.center)
+                    .padding(4)
             }
             
-            // Debug overlay
-            VStack(alignment: .leading, spacing: 2) {
-                Spacer()
-                HStack {
-                    Spacer()
-                    VStack(alignment: .trailing, spacing: 1) {
-                        Text("ID: \(slot.id)")
-                            .font(.system(size: 8, weight: .bold))
-                        Text(slot.type.rawValue)
-                            .font(.system(size: 7))
-                        Text("(\(Int(slot.cgRect.origin.x)),\(Int(slot.cgRect.origin.y)))")
-                            .font(.system(size: 6))
-                        Text("\(Int(slot.cgRect.width))×\(Int(slot.cgRect.height))")
-                            .font(.system(size: 6))
-                    }
-                    .foregroundColor(.white)
-                    .padding(4)
-                    .background(Color.black.opacity(0.7))
-                    .cornerRadius(4)
-                }
-            }
+            // Add separator lines around the slot
+            Rectangle()
+                .stroke(theme.shadow.opacity(0.2), lineWidth: 1)
         }
         .frame(width: rect.width, height: rect.height)
         .position(x: rect.midX, y: rect.midY)
@@ -167,6 +195,54 @@ struct InfoRow: View {
             Text(value)
                 .font(.appBody)
                 .foregroundColor(theme.textPrimary)
+        }
+    }
+}
+
+struct DebugDetailsCard: View {
+    let template: VisionBoardTemplate
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Debug Details")
+                .font(.appSecondary)
+                .foregroundColor(theme.textPrimary)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(template.slots) { slot in
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Text("Slot ID: \(slot.id)")
+                                .font(.system(size: 12, weight: .bold))
+                            Spacer()
+                            Text(slot.type.rawValue)
+                                .font(.system(size: 11))
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 2)
+                                .background(theme.accent.opacity(0.2))
+                                .cornerRadius(4)
+                        }
+                        
+                        HStack {
+                            Text("Position: (\(Int(slot.cgRect.origin.x)), \(Int(slot.cgRect.origin.y)))")
+                                .font(.system(size: 10))
+                            Spacer()
+                            Text("Size: \(Int(slot.cgRect.width))×\(Int(slot.cgRect.height))")
+                                .font(.system(size: 10))
+                        }
+                        .foregroundColor(theme.textSecondary)
+                    }
+                    .padding(.vertical, 4)
+                    
+                    if slot.id != template.slots.last?.id {
+                        Divider()
+                            .background(theme.shadow.opacity(0.3))
+                    }
+                }
+            }
+            .padding(16)
+            .background(theme.secondary.opacity(0.1))
+            .cornerRadius(12)
         }
     }
 }
