@@ -70,7 +70,7 @@ struct TemplatePreviewView: View {
     var body: some View {
         GeometryReader { geometry in
             let cellWidth = geometry.size.width / template.cgGridSize.width
-            let cellHeight = geometry.size.height / template.cgGridSize.height
+            let cellHeight = cellWidth // Make cells square for proper proportions
             
             ZStack {
                 // Background

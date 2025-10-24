@@ -22,7 +22,7 @@ struct VisionBoardTemplateDetailView: View {
                 
                 // Template visualization
                 TemplateVisualizationView(template: template)
-                    .padding(.horizontal)
+                    .padding(.horizontal, 10)
                 
                 // Template info
                 TemplateInfoView(template: template)
@@ -41,9 +41,9 @@ struct TemplateVisualizationView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let availableWidth = geometry.size.width - 32 // padding
+            let availableWidth = geometry.size.width // Use full width
             let cellWidth = availableWidth / template.cgGridSize.width
-            let cellHeight = cellWidth * 1.2 // Maintain aspect ratio
+            let cellHeight = cellWidth // Make cells square for proper proportions
             let totalHeight = cellHeight * template.cgGridSize.height
             
             ZStack {
@@ -72,7 +72,6 @@ struct TemplateVisualizationView: View {
             }
             .frame(width: availableWidth, height: totalHeight)
         }
-        .frame(height: 400) // Fixed height for consistent layout
     }
 }
 
