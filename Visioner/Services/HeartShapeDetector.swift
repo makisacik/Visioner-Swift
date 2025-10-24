@@ -29,12 +29,7 @@ struct HeartShapeDetector {
         guard let firstPoint = points.first, let lastPoint = points.last else { return false }
         
         let distance = sqrt(pow(lastPoint.x - firstPoint.x, 2) + pow(lastPoint.y - firstPoint.y, 2))
-        let isClosed = distance < 60 // Increased tolerance to 60 points
-        
-        // Debug logging
-        print("Closed shape check - Distance: \(distance), IsClosed: \(isClosed)")
-        
-        return isClosed
+        return distance < 60 // Increased tolerance to 60 points
     }
     
     /// Checks if the drawing has a reasonable size for a heart
@@ -48,12 +43,7 @@ struct HeartShapeDetector {
         let height = maxY - minY
         let minSize: CGFloat = 60 // Reduced minimum size for a valid heart
         
-        let hasSize = width > minSize && height > minSize
-        
-        // Debug logging
-        print("Size check - Width: \(width), Height: \(height), MinSize: \(minSize), HasSize: \(hasSize)")
-        
-        return hasSize
+        return width > minSize && height > minSize
     }
     
     /// Analyzes the shape for heart-like characteristics
@@ -103,10 +93,6 @@ struct HeartShapeDetector {
         let isClosed = isClosedShape(points: points)
         let hasSize = hasReasonableSize(points: points)
         
-        // Debug logging
-        print("Heart detection - Points: \(points.count), IsClosed: \(isClosed), HasSize: \(hasSize)")
-        
-        // More lenient: if it's closed OR has good size, consider it valid
         return isClosed && hasSize
     }
 }

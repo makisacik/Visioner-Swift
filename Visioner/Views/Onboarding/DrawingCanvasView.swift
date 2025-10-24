@@ -11,6 +11,7 @@ struct DrawingCanvasView: View {
     @Binding var path: Path
     @Binding var isDrawing: Bool
     @Binding var hasValidDrawing: Bool
+    @Binding var heartFilled: Bool
     let onDrawingComplete: () -> Void
     let onHeartDetected: () -> Void
     
@@ -31,6 +32,21 @@ struct DrawingCanvasView: View {
             
             // Drawing area
             Canvas { context, size in
+                // Fill the heart area if detected
+                if heartFilled && hasValidDrawing {
+                    context.fill(
+                        path,
+                        with: .linearGradient(
+                            Gradient(colors: [
+                                Color(hex: "#E9A8D0").opacity(0.3),
+                                Color(hex: "#C4B1E6").opacity(0.2)
+                            ]),
+                            startPoint: CGPoint(x: 0, y: 0),
+                            endPoint: CGPoint(x: size.width, y: size.height)
+                        )
+                    )
+                }
+
                 // Draw the completed path
                 context.stroke(
                     path,
@@ -126,6 +142,7 @@ struct DrawingCanvasView: View {
             path: .constant(Path()),
             isDrawing: .constant(false),
             hasValidDrawing: .constant(false),
+            heartFilled: .constant(false),
             onDrawingComplete: {},
             onHeartDetected: {}
         )

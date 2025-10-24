@@ -18,6 +18,8 @@ struct DrawHeartView: View {
     @State private var showSparkles = false
     @State private var canvasGlow = false
     @State private var breathingEffect = false
+    @State private var showLovelyText = false
+    @State private var heartFilled = false
     
     let onComplete: () -> Void
     
@@ -96,6 +98,7 @@ struct DrawHeartView: View {
                             path: $path,
                             isDrawing: $isDrawing,
                             hasValidDrawing: $hasValidDrawing,
+                            heartFilled: $heartFilled,
                             onDrawingComplete: {
                                 // Handle drawing completion
                             },
@@ -110,7 +113,7 @@ struct DrawHeartView: View {
                 }
                 
                 // Instruction text
-                if showInstruction {
+                if showInstruction && !showLovelyText {
                     Text("Use your finger to draw a heart")
                         .font(.appSecondary)
                         .foregroundColor(.white.opacity(0.8))
@@ -119,8 +122,29 @@ struct DrawHeartView: View {
                         .transition(.opacity.combined(with: .move(edge: .bottom)))
                 }
                 
-                Spacer()
+                // Lovely feedback text
+                if showLovelyText {
+                    Text("Lovely")
+                        .font(.appOnboardingQuote)
+                        .fontWeight(.medium)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .opacity(showLovelyText ? 1 : 0)
+                        .scaleEffect(showLovelyText ? 1.0 : 0.8)
+                        .transition(.opacity.combined(with: .scale(scale: 0.8)))
+                        .overlay(
+                            // Glow effect
+                            Text("Lovely")
+                                .font(.appOnboardingQuote)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color(hex: "#E9A8D0"))
+                                .blur(radius: 6)
+                                .opacity(showLovelyText ? 0.4 : 0)
+                        )
+                }
                 
+                Spacer()
+
                 // Continue button
                 if showContinueButton {
                     Button(action: {
@@ -208,20 +232,34 @@ struct DrawHeartView: View {
     }
     
     private func handleHeartDetected() {
-        // Trigger sparkle animation
-        withAnimation(.easeInOut(duration: 0.5)) {
-            showSparkles = true
+        // Hide instruction text and show "Lovely" feedback
+        withAnimation(.easeInOut(duration: 0.3)) {
+            showInstruction = false
         }
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.easeInOut(duration: 0.8)) {
+                showLovelyText = true
+                heartFilled = true
+            }
+        }
+
+        // Trigger sparkle animation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            withAnimation(.easeInOut(duration: 0.5)) {
+                showSparkles = true
+            }
+        }
+
         // Show continue button after sparkles
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             withAnimation(.easeInOut(duration: 1.0)) {
                 showContinueButton = true
             }
         }
         
         // Hide sparkles after animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
             withAnimation(.easeInOut(duration: 0.5)) {
                 showSparkles = false
             }
