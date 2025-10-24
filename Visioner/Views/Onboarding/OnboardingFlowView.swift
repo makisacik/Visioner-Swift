@@ -12,6 +12,7 @@ struct OnboardingFlowView: View {
     @State private var transitionProgress: Double = 0.0
     @State private var showTransitionParticles = false
     @State private var morphingGradient = false
+    @State private var selectedDreams: Set<ChooseYourVisionsViewModel.DreamCategory> = []
     let onComplete: () -> Void
     
     enum OnboardingStep {
@@ -20,6 +21,7 @@ struct OnboardingFlowView: View {
         case transitioning
         case ethereal
         case chooseDreams
+        case chooseVisions
         case complete
     }
     
@@ -69,8 +71,19 @@ struct OnboardingFlowView: View {
                 .transition(.opacity)
                 
             case .chooseDreams:
-                ChooseYourDreamsView {
-                    startTransition()
+                ChooseYourDreamsView { dreams in
+                    selectedDreams = dreams
+                    withAnimation(.easeInOut(duration: 1.0)) {
+                        currentStep = .chooseVisions
+                    }
+                }
+                .transition(.opacity)
+
+            case .chooseVisions:
+                ChooseYourVisionsView(selectedDreams: selectedDreams) {
+                    withAnimation(.easeInOut(duration: 1.0)) {
+                        currentStep = .complete
+                    }
                 }
                 .transition(.opacity)
                 

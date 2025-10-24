@@ -15,33 +15,9 @@ struct ChooseYourDreamsView: View {
     @State private var continueButtonOpacity: Double = 0
     @State private var showDreamParticles = false
     
-    let onContinue: () -> Void
+    let onContinue: (Set<DreamCategory>) -> Void
     
-    enum DreamCategory: String, CaseIterable {
-        case love = "💖"
-        case career = "💼"
-        case wealth = "💰"
-        case travel = "✈️"
-        case health = "🌿"
-        case creativity = "🎨"
-        case success = "🌞"
-        case peace = "🧘‍♀️"
-        case home = "🏡"
-        
-        var title: String {
-            switch self {
-            case .love: return "Love"
-            case .career: return "Career"
-            case .wealth: return "Wealth"
-            case .travel: return "Travel"
-            case .health: return "Health"
-            case .creativity: return "Creativity"
-            case .success: return "Success"
-            case .peace: return "Peace"
-            case .home: return "Home"
-            }
-        }
-    }
+    typealias DreamCategory = ChooseYourVisionsViewModel.DreamCategory
     
     var body: some View {
         ZStack {
@@ -104,7 +80,7 @@ struct ChooseYourDreamsView: View {
                     if selectedDreams.count >= 2 {
                         Button(action: {
                             withAnimation(.easeInOut(duration: 0.3)) {
-                                onContinue()
+                                onContinue(selectedDreams)
                             }
                         }) {
                             Text("Continue")
@@ -387,8 +363,8 @@ struct DreamParticle: Identifiable {
         )
         .ignoresSafeArea()
         
-        ChooseYourDreamsView {
-            print("Dreams selected, continuing...")
+        ChooseYourDreamsView { dreams in
+            print("Dreams selected: \(dreams), continuing...")
         }
     }
 }
