@@ -1,0 +1,133 @@
+[
+  {
+    "id": "center_focus",
+    "name": "Center Focus",
+    "gridSize": { "width": 12, "height": 8 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 0, "y": 0, "width": 3, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 3, "y": 0, "width": 2, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 5, "y": 0, "width": 2, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 4,
+        "rect": { "x": 7, "y": 0, "width": 5, "height": 8 },
+        "type": "image"
+      },
+      {
+        "id": 5,
+        "rect": { "x": 3, "y": 2, "width": 4, "height": 3 },
+        "type": "text"
+      },
+      {
+        "id": 6,
+        "rect": { "x": 0, "y": 4, "width": 3, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 7,
+        "rect": { "x": 3, "y": 5, "width": 4, "height": 3 },
+        "type": "image"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#F4EFFC",
+      "accentColorHex": "#E9A8D0",
+      "fontName": "PlayfairDisplay-Regular"
+    }
+  },
+  {
+    "id": "balanced_four",
+    "name": "Balanced Four",
+    "gridSize": { "width": 8, "height": 8 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 0, "y": 0, "width": 4, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 4, "y": 0, "width": 4, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 0, "y": 4, "width": 4, "height": 4 },
+        "type": "image"
+      },
+      {
+        "id": 4,
+        "rect": { "x": 4, "y": 4, "width": 4, "height": 4 },
+        "type": "text"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#F8F4F7",
+      "accentColorHex": "#A86D9F",
+      "fontName": "NunitoSans-Bold"
+    }
+  },
+  {
+    "id": "asymmetric_collage",
+    "name": "Asymmetric Collage",
+    "gridSize": { "width": 10, "height": 8 },
+    "slots": [
+      {
+        "id": 1,
+        "rect": { "x": 0, "y": 0, "width": 5, "height": 3 },
+        "type": "image"
+      },
+      {
+        "id": 2,
+        "rect": { "x": 5, "y": 0, "width": 5, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 3,
+        "rect": { "x": 5, "y": 2, "width": 3, "height": 3 },
+        "type": "text"
+      },
+      {
+        "id": 4,
+        "rect": { "x": 8, "y": 2, "width": 2, "height": 3 },
+        "type": "image"
+      },
+      {
+        "id": 5,
+        "rect": { "x": 0, "y": 3, "width": 3, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 6,
+        "rect": { "x": 3, "y": 3, "width": 2, "height": 2 },
+        "type": "image"
+      },
+      {
+        "id": 7,
+        "rect": { "x": 0, "y": 5, "width": 4, "height": 3 },
+        "type": "image"
+      },
+      {
+        "id": 8,
+        "rect": { "x": 4, "y": 5, "width": 6, "height": 3 },
+        "type": "text"
+      }
+    ],
+    "theme": {
+      "backgroundColorHex": "#FFF5FA",
+      "accentColorHex": "#FFC0CB",
+      "fontName": "Inter 28pt Light"
+    }
+  }
+]

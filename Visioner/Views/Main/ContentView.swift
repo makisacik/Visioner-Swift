@@ -41,6 +41,12 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink("Vision Boards") {
+                        VisionBoardGalleryView()
+                    }
+                    .font(.appButton)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink("Font Test") {
                         FontTestView()
                     }
