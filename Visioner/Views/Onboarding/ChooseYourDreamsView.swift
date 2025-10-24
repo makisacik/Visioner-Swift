@@ -27,6 +27,33 @@ struct ChooseYourDreamsView: View {
                     .ignoresSafeArea()
             }
             
+            // Testing continue button overlay
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        onContinue(selectedDreams)
+                    }) {
+                        Text("Continue")
+                            .font(.appButton)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(
+                                Capsule()
+                                    .fill(Color.white.opacity(0.2))
+                                    .overlay(
+                                        Capsule()
+                                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                                    )
+                            )
+                    }
+                    .padding(.top, 50)
+                    .padding(.trailing, 20)
+                }
+                Spacer()
+            }
+
             VStack(spacing: 0) {
                 Spacer()
                 
