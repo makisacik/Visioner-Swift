@@ -10,6 +10,7 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var onboardingManager: OnboardingManager
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
@@ -22,8 +23,10 @@ struct ContentView: View {
                 ForEach(items) { item in
                     NavigationLink {
                         Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                            .font(.appBody)
                     } label: {
                         Text(item.timestamp!, formatter: itemFormatter)
+                            .font(.appBody)
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -37,8 +40,27 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink("Font Test") {
+                        FontTestView()
+                    }
+                    .font(.appCaption)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink("Debug") {
+                        FontDebugView()
+                    }
+                    .font(.appCaption)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Reset Onboarding") {
+                        onboardingManager.resetOnboarding()
+                    }
+                    .font(.appCaption)
+                }
             }
             Text("Select an item")
+                .font(.appSecondary)
         }
     }
 

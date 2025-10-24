@@ -256,6 +256,7 @@
 				DEVELOPMENT_TEAM = FYS62UHY46;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIAppFonts = "Fraunces_72pt_Soft-SemiBold.ttf PlayfairDisplay-Regular.ttf Inter_28pt-Light.ttf Inter_28pt-Medium.ttf NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -289,6 +290,7 @@
 				DEVELOPMENT_TEAM = FYS62UHY46;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIAppFonts = "Fraunces_72pt_Soft-SemiBold.ttf PlayfairDisplay-Regular.ttf Inter_28pt-Light.ttf Inter_28pt-Medium.ttf NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

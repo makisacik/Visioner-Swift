@@ -11,11 +11,26 @@ import CoreData
 @main
 struct VisionerApp: App {
     let persistenceController = PersistenceController.shared
+    @StateObject private var onboardingManager = OnboardingManager()
+
+    init() {
+        // Initialize font loader to register custom fonts
+        _ = FontLoader.shared
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            Group {
+                if onboardingManager.hasCompletedOnboarding {
+                    ContentView()
+                        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                } else {
+                    OnboardingFlowView {
+                        onboardingManager.completeOnboarding()
+                    }
+                }
+            }
+            .environmentObject(onboardingManager)
         }
     }
 }

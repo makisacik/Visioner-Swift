@@ -9,7 +9,7 @@ import SwiftUI
 
 enum AppFontName {
     static let frauncesSemiBold = "Fraunces 72pt Soft SemiBold"
-    static let playfairRegular  = "PlayfairDisplay-Regular"
+    static let playfairRegular  = "Playfair Display"
     static let interLight       = "Inter 28pt Light"
     static let interMedium      = "Inter 28pt Medium"
     static let nunitoSans       = "Nunito Sans"   // variable family
