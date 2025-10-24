@@ -29,9 +29,9 @@ struct VisionBoardTemplateDetailView: View {
                     .padding(.horizontal)
 
                 // Template visualization with proper aspect ratio
-                TemplateVisualizationView(template: template)
+                UnifiedTemplateVisualizationView(template: template)
                     .aspectRatio(template.cgGridSize.width / template.cgGridSize.height, contentMode: .fit)
-                    .frame(maxHeight: 300) // Maximum height to prevent overly tall cards
+                    .frame(maxHeight: 400) // Increased height to show all slots
                     .padding(.horizontal, 10)
 
                 // Create board CTA - now properly below the image
@@ -80,7 +80,9 @@ struct VisionBoardTemplateDetailView: View {
     }
 }
 
-struct TemplateVisualizationView: View {
+// MARK: - Unified Template Visualization (shared between gallery and detail views)
+
+struct UnifiedTemplateVisualizationView: View {
     let template: VisionBoardTemplate
     
     var body: some View {
@@ -104,11 +106,10 @@ struct TemplateVisualizationView: View {
                         height: slot.cgRect.height * cellHeight
                     )
                     
-                    SlotView(
+                    UnifiedSlotView(
                         slot: slot,
                         rect: rect,
-                        cellWidth: cellWidth,
-                        cellHeight: cellHeight
+                        template: template
                     )
                 }
             }
@@ -119,11 +120,12 @@ struct TemplateVisualizationView: View {
     }
 }
 
-struct SlotView: View {
+// MARK: - Unified Slot View (shared between gallery and detail views)
+
+struct UnifiedSlotView: View {
     let slot: VisionSlotTemplate
     let rect: CGRect
-    let cellWidth: CGFloat
-    let cellHeight: CGFloat
+    let template: VisionBoardTemplate
     
     private var placeholderImageName: String {
         let imageIndex = (slot.id % 8) + 1
@@ -132,31 +134,67 @@ struct SlotView: View {
     
     var body: some View {
         ZStack {
-            // Slot background
-            Rectangle()
-                .fill(slot.type == .image ? theme.accent.opacity(0.1) : theme.accentStrong.opacity(0.1))
-            
-            // Content based on slot type
             if slot.type == .image {
+                // Image slot with template image asset
                 Image(placeholderImageName)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: rect.width, height: rect.height)
                     .clipped()
+                    .overlay(
+                        // Subtle overlay to show it's a preview
+                        Rectangle()
+                            .fill(theme.primary.opacity(0.1))
+                    )
             } else {
-                Text("I am manifesting\nabundance")
-                    .font(.appBody)
-                    .foregroundColor(theme.textPrimary)
-                    .multilineTextAlignment(.center)
-                    .padding(4)
+                // Text slot with sample affirmation
+                Rectangle()
+                    .fill(theme.accentStrong.opacity(0.1))
+                    .overlay(
+                        VStack(spacing: 4) {
+                            Text(sampleAffirmation(for: slot.id))
+                                .font(.appBody)
+                                .foregroundColor(theme.accentStrong)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(3)
+                                .minimumScaleFactor(0.7)
+                        }
+                        .padding(6)
+                    )
             }
             
             // Add separator lines around the slot
             Rectangle()
-                .stroke(theme.shadow.opacity(0.2), lineWidth: 1)
+                .stroke(theme.shadow.opacity(0.3), lineWidth: 1)
         }
         .frame(width: rect.width, height: rect.height)
         .position(x: rect.midX, y: rect.midY)
+    }
+    
+    private func sampleAffirmation(for slotId: Int) -> String {
+        let affirmations = [
+            "I am worthy",
+            "Success flows to me",
+            "I am grateful",
+            "Abundance is mine",
+            "Love surrounds me",
+            "I am confident",
+            "Dreams come true",
+            "I am blessed",
+            "I am powerful",
+            "Joy fills my heart",
+            "I attract miracles",
+            "Peace flows through me",
+            "I am unstoppable",
+            "Happiness is my birthright",
+            "I manifest my desires",
+            "I am loved deeply",
+            "Wealth comes to me easily",
+            "I am healthy and strong",
+            "My future is bright",
+            "I am exactly where I need to be"
+        ]
+        return affirmations[slotId % affirmations.count]
     }
 }
 
@@ -213,10 +251,11 @@ struct DebugDetailsCard: View {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Text("Slot ID: \(slot.id)")
-                                .font(.system(size: 12, weight: .bold))
+                                .font(.appCaption)
+                                .fontWeight(.bold)
                             Spacer()
                             Text(slot.type.rawValue)
-                                .font(.system(size: 11))
+                                .font(.appCaption)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 2)
                                 .background(theme.accent.opacity(0.2))
@@ -225,10 +264,10 @@ struct DebugDetailsCard: View {
                         
                         HStack {
                             Text("Position: (\(Int(slot.cgRect.origin.x)), \(Int(slot.cgRect.origin.y)))")
-                                .font(.system(size: 10))
+                                .font(.appCaption)
                             Spacer()
                             Text("Size: \(Int(slot.cgRect.width))×\(Int(slot.cgRect.height))")
-                                .font(.system(size: 10))
+                                .font(.appCaption)
                         }
                         .foregroundColor(theme.textSecondary)
                     }

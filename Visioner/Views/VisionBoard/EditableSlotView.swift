@@ -115,9 +115,8 @@ struct EditableSlotView: View {
     
     private func textContentView(text: String, style: SlotContentEntity) -> some View {
         Text(text)
-            .font(.custom(style.fontName ?? "Nunito Sans", 
-                         size: CGFloat(style.fontSize)))
-            .foregroundColor(Color(hex: style.colorHex ?? "#2B1F4A"))
+            .font(.appBody)
+            .foregroundColor(theme.textPrimary)
             .multilineTextAlignment(.center)
             .padding(8)
             .frame(maxWidth: .infinity, maxHeight: .infinity)

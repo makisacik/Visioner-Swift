@@ -27,132 +27,106 @@ struct VisionBoardGalleryView: View {
             .background(theme.background)
             .navigationTitle("Vision Boards")
             .font(.appLogo)
+            .foregroundColor(theme.textPrimary)
         }
     }
 }
 
 struct TemplateCardView: View {
     let template: VisionBoardTemplate
+    @State private var isPressed = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Template preview with prefilled content - centered within fixed width
+        VStack(alignment: .leading, spacing: 16) {
+            // Template preview with enhanced elevation
             HStack {
                 Spacer()
-                TemplatePreviewView(template: template)
+                UnifiedTemplateVisualizationView(template: template)
                     .aspectRatio(template.cgGridSize.width / template.cgGridSize.height, contentMode: .fit)
-                    .frame(maxHeight: 300) // Maximum height to prevent cards from being too tall
-                    .background(theme.secondary.opacity(0.3))
-                    .cornerRadius(12)
+                    .frame(maxHeight: 300)
+                    .background(
+                        // Multi-layer background for depth with better contrast
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(theme.background)
+                            .shadow(color: theme.shadow.opacity(0.4), radius: 10, x: 0, y: 5)
+                    )
+                    .overlay(
+                        // More visible border for template preview
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(theme.shadow.opacity(0.2), lineWidth: 1.5)
+                    )
+                    .clipped()
                 Spacer()
             }
             
-            // Template name
-            Text(template.name)
-                .font(.appSecondary)
-                .foregroundColor(theme.textPrimary)
-                .multilineTextAlignment(.leading)
-            
-            // Slot count info
-            Text("\(template.slots.count) slots")
-                .font(.appCaption)
-                .foregroundColor(theme.textSecondary)
-        }
-        .padding(16)
-        .background(theme.secondary.opacity(0.1))
-        .cornerRadius(16)
-        .frame(maxWidth: .infinity) // Make all cards the same width
-        .shadow(color: theme.shadow, radius: 8, x: 0, y: 4) // Add shadow to cards
-    }
-}
-
-struct TemplatePreviewView: View {
-    let template: VisionBoardTemplate
-    
-    var body: some View {
-        GeometryReader { geometry in
-            let cellWidth = geometry.size.width / template.cgGridSize.width
-            let cellHeight = cellWidth // Make cells square for proper proportions
-            
-            ZStack {
-                // Background with theme color
-                Rectangle()
-                    .fill(Color(hex: template.theme?.backgroundColorHex ?? "#F4EFFC") ?? theme.background)
+            // Content section with better spacing
+            VStack(alignment: .leading, spacing: 8) {
+                // Template name with enhanced typography
+                Text(template.name)
+                    .font(.appSecondary)
+                    .fontWeight(.medium)
+                    .foregroundColor(theme.textPrimary)
+                    .multilineTextAlignment(.leading)
                 
-                // Render slots directly (they handle their own positioning and sizing)
-                ForEach(template.slots) { slot in
-                    let rect = CGRect(
-                        x: slot.cgRect.origin.x * cellWidth,
-                        y: slot.cgRect.origin.y * cellHeight,
-                        width: slot.cgRect.width * cellWidth,
-                        height: slot.cgRect.height * cellHeight
-                    )
+                // Slot count with badge-like styling
+                HStack(spacing: 6) {
+                    Image(systemName: "grid")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(theme.accent)
                     
-                    SlotPreviewView(
-                        slot: slot,
-                        rect: rect,
-                        template: template
-                    )
+                    Text("\(template.slots.count) slots")
+                        .font(.appCaption)
+                        .foregroundColor(theme.textSecondary)
                 }
             }
         }
+        .padding(20)
+        .background(
+            // Enhanced card background with stronger contrast
+            RoundedRectangle(cornerRadius: 20)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            theme.background,
+                            theme.secondary.opacity(0.15)
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .overlay(
+                    // More visible border for better definition
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(theme.shadow.opacity(0.25), lineWidth: 1.5)
+                )
+        )
+        .frame(maxWidth: .infinity)
+        .scaleEffect(isPressed ? 0.98 : 1.0)
+        .shadow(
+            color: theme.shadow.opacity(0.15),
+            radius: isPressed ? 12 : 20,
+            x: 0,
+            y: isPressed ? 6 : 10
+        )
+        .shadow(
+            color: theme.shadow.opacity(0.08),
+            radius: isPressed ? 6 : 8,
+            x: 0,
+            y: isPressed ? 3 : 4
+        )
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
+        .onTapGesture {
+            // Haptic feedback for better UX
+            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+            impactFeedback.impactOccurred()
+        }
+        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
+            isPressed = pressing
+        }, perform: {})
     }
 }
 
-struct SlotPreviewView: View {
-    let slot: VisionSlotTemplate
-    let rect: CGRect
-    let template: VisionBoardTemplate
-    
-    private var placeholderImageName: String {
-        let imageIndex = (slot.id % 8) + 1
-        return "placeholder-\(imageIndex)"
-    }
-    
-    var body: some View {
-        ZStack {
-            if slot.type == .image {
-                // Image slot with template image asset - no corner radius
-                Image(placeholderImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: rect.width, height: rect.height)
-                    .clipped()
-            } else {
-                // Text slot with sample affirmation
-                Rectangle()
-                    .fill(theme.accentStrong.opacity(0.1))
-                    .overlay(
-                        Text(sampleAffirmation(for: slot.id))
-                            .font(.system(size: min(rect.width, rect.height) * 0.15, weight: .medium))
-                            .foregroundColor(Color(hex: template.theme?.accentColorHex ?? "#E9A8D0") ?? theme.accentStrong)
-                            .multilineTextAlignment(.center)
-                            .padding(4)
-                    )
-            }
-            
-            // Add separator lines around the slot
-            Rectangle()
-                .stroke(theme.shadow.opacity(0.2), lineWidth: 1)
-        }
-        .frame(width: rect.width, height: rect.height)
-        .position(x: rect.midX, y: rect.midY)
-    }
-    
-    private func sampleAffirmation(for slotId: Int) -> String {
-        let affirmations = [
-            "I am worthy",
-            "Success flows to me",
-            "I am grateful",
-            "Abundance is mine",
-            "Love surrounds me",
-            "I am confident",
-            "Dreams come true",
-            "I am blessed"
-        ]
-        return affirmations[slotId % affirmations.count]
-    }
-}
+
 
 #Preview {
     VisionBoardGalleryView()
