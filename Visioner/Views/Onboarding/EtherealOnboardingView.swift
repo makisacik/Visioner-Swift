@@ -82,9 +82,9 @@ struct EtherealOnboardingView: View {
                 
                 // Main text content - centered vertically at ~40% from top
                 VStack(spacing: 16) {
-                    // Line 1: "Here, your dreams take form."
+                    // Line 1: "This is where your vision comes to life."
                     if showFirstLine {
-                        Text("Here, your dreams take form.")
+                        Text("This is where your vision comes to life.")
                             .font(.custom("Playfair Display", size: 36))
                             .fontWeight(.regular)
                             .foregroundColor(Color(hex: "#F4EFFC").opacity(0.9))
@@ -95,7 +95,7 @@ struct EtherealOnboardingView: View {
                             .transition(.opacity.combined(with: .scale(scale: 0.9)))
                             .overlay(
                                 // Outer glow effect
-                                Text("Here, your dreams take form.")
+                                Text("This is where your vision comes to life.")
                                     .font(.custom("Playfair Display", size: 36))
                                     .fontWeight(.regular)
                                     .foregroundColor(Color(hex: "#E9A8D0").opacity(0.2))
@@ -104,9 +104,9 @@ struct EtherealOnboardingView: View {
                             )
                     }
                     
-                    // Line 2: "Every image… every word…"
+                    // Line 2: "Each picture, each affirmation —"
                     if showSecondLine {
-                        Text("Every image… every word…")
+                        Text("Each picture, each affirmation —")
                             .font(.custom("Playfair Display", size: 28))
                             .fontWeight(.light)
                             .foregroundColor(Color(hex: "#F4EFFC").opacity(0.9))
@@ -124,7 +124,7 @@ struct EtherealOnboardingView: View {
                                     endPoint: .trailing
                                 )
                                 .mask(
-                                    Text("Every image… every word…")
+                                    Text("Each picture, each affirmation —")
                                         .font(.custom("Playfair Display", size: 28))
                                         .fontWeight(.light)
                                 )
@@ -133,9 +133,9 @@ struct EtherealOnboardingView: View {
                             )
                     }
                     
-                    // Line 3: "is a mirror of who you're becoming."
+                    // Line 3: "a reminder of the future you're building."
                     if showThirdLine {
-                        Text("is a mirror of who you're becoming.")
+                        Text("a reminder of the future you're building.")
                             .font(.custom("Playfair Display", size: 24))
                             .fontWeight(.medium)
                             .italic()
@@ -147,7 +147,7 @@ struct EtherealOnboardingView: View {
                             .transition(.opacity.combined(with: .move(edge: .bottom)))
                             .overlay(
                                 // Outer glow effect
-                                Text("is a mirror of who you're becoming.")
+                                Text("a reminder of the future you're building.")
                                     .font(.custom("Playfair Display", size: 24))
                                     .fontWeight(.medium)
                                     .italic()
