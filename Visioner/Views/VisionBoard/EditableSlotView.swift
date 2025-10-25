@@ -77,6 +77,14 @@ struct EditableSlotView: View {
     
     // MARK: - Computed Properties
     
+    private var effectiveSlotType: SlotType {
+        // Use slot content type if available, otherwise use template type
+        if let slotContent = slotContent, let slotTypeString = slotContent.slotType {
+            return SlotType(rawValue: slotTypeString) ?? slot.type
+        }
+        return slot.type
+    }
+    
     private var hasContent: Bool {
         guard let content = slotContent else { return false }
         return content.imageData != nil || (content.text != nil && !content.text!.isEmpty)
@@ -86,7 +94,7 @@ struct EditableSlotView: View {
         if hasContent {
             return theme.background
         } else {
-            return slot.type == .image ? 
+            return effectiveSlotType == .image ? 
                 theme.accent.opacity(0.1) : 
                 theme.accentStrong.opacity(0.1)
         }
@@ -127,7 +135,6 @@ struct EditableSlotView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: rect.width, height: rect.height)
                     .clipped()
-                    .cornerRadius(8)
             } else {
                 placeholderView
             }
@@ -146,7 +153,7 @@ struct EditableSlotView: View {
     private var placeholderView: some View {
         ZStack {
             VStack(spacing: 8) {
-                Image(systemName: slot.type == .image ? "photo" : "text.quote")
+                Image(systemName: effectiveSlotType == .image ? "photo" : "text.quote")
                     .font(.system(size: 24, weight: .light))
                     .foregroundColor(theme.textSecondary.opacity(0.6))
                 
@@ -169,21 +176,25 @@ struct EditableSlotView: View {
             }
         }
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            Rectangle()
                 .stroke(theme.accent.opacity(0.3), lineWidth: 1)
                 .opacity(0.5)
         )
     }
     
     private var placeholderText: String {
-        slot.type == .image ? "+ Add image" : "+ Write affirmation"
+        if hasContent {
+            return effectiveSlotType == .image ? "Image" : "Text"
+        } else {
+            return effectiveSlotType == .image ? "+ Add image" : "+ Write affirmation"
+        }
     }
     
     private var selectionOverlay: some View {
-        RoundedRectangle(cornerRadius: 8)
+        Rectangle()
             .stroke(theme.accentStrong, lineWidth: 2)
             .background(
-                RoundedRectangle(cornerRadius: 8)
+                Rectangle()
                     .fill(theme.accentStrong.opacity(0.1))
             )
             .frame(width: rect.width, height: rect.height)
@@ -192,7 +203,7 @@ struct EditableSlotView: View {
     // MARK: - Animation Overlays
     
     private var bloomOverlay: some View {
-        RoundedRectangle(cornerRadius: 8)
+        Rectangle()
             .fill(
                 RadialGradient(
                     colors: [
@@ -226,7 +237,6 @@ struct EditableSlotView: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(theme.accentStrong)
-            .cornerRadius(12)
             .scaleEffect(showSuccessMessage ? 1.0 : 0.8)
             .opacity(showSuccessMessage ? 1.0 : 0.0)
             .animation(.spring(response: 0.4, dampingFraction: 0.7), value: showSuccessMessage)

@@ -181,7 +181,7 @@ struct CleanBoardExportView: View {
             
             ZStack {
                 // Clean background - just the board content
-                RoundedRectangle(cornerRadius: 16)
+                Rectangle()
                     .fill(theme.background)
                     .shadow(color: theme.shadow, radius: 8, x: 0, y: 4)
                 
@@ -275,7 +275,7 @@ struct BoardExportView: View {
             
             ZStack {
                 // Background
-                RoundedRectangle(cornerRadius: 20)
+                Rectangle()
                     .fill(theme.background)
                     .shadow(color: theme.shadow, radius: 20, x: 0, y: 10)
                 
@@ -355,7 +355,6 @@ struct ExportSlotView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: rect.width, height: rect.height)
                     .clipped()
-                    .cornerRadius(8)
             } else {
                 placeholderView
             }

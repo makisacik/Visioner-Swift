@@ -179,4 +179,50 @@ final class VisionBoardEditorViewModel: ObservableObject {
             }
         }
     }
+    
+    /// Get the current slot type (from slot content if available, otherwise from template)
+    func getCurrentSlotType() -> SlotType {
+        guard let selectedSlotId = selectedSlotId,
+              let slotTemplate = selectedSlotTemplate else { return .image }
+        
+        // Use slot content type if available, otherwise use template type
+        if let slotContent = board.slotsArray.first(where: { $0.id == selectedSlotId }),
+           let slotTypeString = slotContent.slotType {
+            return SlotType(rawValue: slotTypeString) ?? slotTemplate.type
+        }
+        return slotTemplate.type
+    }
+    
+    /// Toggle the slot type between image and text
+    func toggleSlotType() {
+        guard let selectedSlotId = selectedSlotId,
+              let slotTemplate = selectedSlotTemplate else { return }
+        
+        // Determine the new type based on current slot content type
+        let currentSlotType = SlotType(rawValue: board.slotsArray.first(where: { $0.id == selectedSlotId })?.slotType ?? slotTemplate.type.rawValue) ?? slotTemplate.type
+        let newType: SlotType = currentSlotType == .image ? .text : .image
+        
+        // Update the corresponding slot content in Core Data
+        if let slotContent = board.slotsArray.first(where: { $0.id == selectedSlotId }) {
+            slotContent.slotType = newType.rawValue
+            
+            // Clear content when switching types
+            if newType == .image {
+                slotContent.text = nil
+            } else {
+                slotContent.imageData = nil
+            }
+            
+            // Save changes
+            do {
+                try board.managedObjectContext?.save()
+                refreshBoard()
+                
+                // Haptic feedback
+                HapticFeedbackService.shared.provideFeedback(.success)
+            } catch {
+                print("Failed to toggle slot type: \(error)")
+            }
+        }
+    }
 }
