@@ -22,7 +22,7 @@ struct VisionerApp: App {
         WindowGroup {
             Group {
                 if onboardingManager.hasCompletedOnboarding {
-                    ContentView()
+                    VisionBoardGalleryView()
                         .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 } else {
                     OnboardingFlowView {

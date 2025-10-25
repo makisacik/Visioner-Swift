@@ -15,8 +15,21 @@ struct EditableSlotView: View {
     let rect: CGRect
     let isSelected: Bool
     let onTap: () -> Void
+    let onDoubleTap: (() -> Void)?
     
     @State private var isPressed = false
+    @State private var showFocusMode = false
+    @State private var showBloom = false
+    @State private var showSuccessMessage = false
+    
+    init(slot: VisionSlotTemplate, slotContent: SlotContentEntity?, rect: CGRect, isSelected: Bool, onTap: @escaping () -> Void, onDoubleTap: (() -> Void)? = nil) {
+        self.slot = slot
+        self.slotContent = slotContent
+        self.rect = rect
+        self.isSelected = isSelected
+        self.onTap = onTap
+        self.onDoubleTap = onDoubleTap
+    }
     
     var body: some View {
         ZStack {
@@ -52,6 +65,14 @@ struct EditableSlotView: View {
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
             isPressed = pressing
         }, perform: {})
+        .gesture(
+            TapGesture(count: 2)
+                .onEnded {
+                    onDoubleTap?()
+                    // Haptic feedback for double tap
+                    HapticFeedbackService.shared.provideFeedback(.focus)
+                }
+        )
     }
     
     // MARK: - Computed Properties
@@ -123,19 +144,31 @@ struct EditableSlotView: View {
     }
     
     private var placeholderView: some View {
-        VStack(spacing: 8) {
-            Image(systemName: slot.type == .image ? "photo" : "text.quote")
-                .font(.system(size: 24, weight: .light))
-                .foregroundColor(theme.textSecondary.opacity(0.6))
+        ZStack {
+            VStack(spacing: 8) {
+                Image(systemName: slot.type == .image ? "photo" : "text.quote")
+                    .font(.system(size: 24, weight: .light))
+                    .foregroundColor(theme.textSecondary.opacity(0.6))
+                
+                Text(placeholderText)
+                    .font(.appCaption)
+                    .foregroundColor(theme.textSecondary.opacity(0.8))
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            Text(placeholderText)
-                .font(.appCaption)
-                .foregroundColor(theme.textSecondary.opacity(0.8))
-                .multilineTextAlignment(.center)
+            
+            // Bloom effect overlay
+            if showBloom {
+                bloomOverlay
+            }
+            
+            // Success message overlay
+            if showSuccessMessage {
+                successMessageOverlay
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(
-            // Subtle shimmer effect for empty slots
             RoundedRectangle(cornerRadius: 8)
                 .stroke(theme.accent.opacity(0.3), lineWidth: 1)
                 .opacity(0.5)
@@ -154,6 +187,78 @@ struct EditableSlotView: View {
                     .fill(theme.accentStrong.opacity(0.1))
             )
             .frame(width: rect.width, height: rect.height)
+    }
+    
+    // MARK: - Animation Overlays
+    
+    private var bloomOverlay: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .fill(
+                RadialGradient(
+                    colors: [
+                        theme.accent.opacity(0.4),
+                        theme.accent.opacity(0.2),
+                        Color.clear
+                    ],
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: rect.width / 2
+                )
+            )
+            .frame(width: rect.width, height: rect.height)
+            .scaleEffect(showBloom ? 1.2 : 0.8)
+            .opacity(showBloom ? 1.0 : 0.0)
+            .animation(.spring(response: 0.6, dampingFraction: 0.6), value: showBloom)
+    }
+    
+    private var successMessageOverlay: some View {
+        VStack {
+            Spacer()
+            
+            HStack(spacing: 4) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 12, weight: .medium))
+                
+                Text("Beautiful choice ✨")
+                    .font(.appCaption)
+            }
+            .foregroundColor(theme.background)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(theme.accentStrong)
+            .cornerRadius(12)
+            .scaleEffect(showSuccessMessage ? 1.0 : 0.8)
+            .opacity(showSuccessMessage ? 1.0 : 0.0)
+            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: showSuccessMessage)
+            
+            Spacer()
+        }
+    }
+    
+    // MARK: - Animation Functions
+    
+    private func triggerBloomAnimation() {
+        withAnimation(.spring(response: 0.6, dampingFraction: 0.6)) {
+            showBloom = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                showBloom = false
+            }
+        }
+    }
+    
+    private func showSuccessFeedback() {
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+            showSuccessMessage = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                showSuccessMessage = false
+            }
+        }
     }
 }
 
@@ -182,7 +287,8 @@ struct EditableSlotView: View {
         slotContent: sampleContent,
         rect: CGRect(x: 0, y: 0, width: 200, height: 200),
         isSelected: false,
-        onTap: {}
+        onTap: {},
+        onDoubleTap: nil
     )
     .frame(width: 200, height: 200)
     .background(Color.gray.opacity(0.1))

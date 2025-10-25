@@ -21,18 +21,24 @@ protocol AppTheme {
     var shadow: Color { get }         // Shadows and subtle outlines
 }
 
-// MARK: - Lavender Dreams Theme
+// MARK: - Lavender Dreams Theme (Updated)
 
 struct LavenderDreamsTheme: AppTheme {
-    var primary: Color        { Color(hex: "#7C64B2") } // main branding
-    var secondary: Color      { Color(hex: "#C4B1E6") } // supporting UI
-    var background: Color     { Color(hex: "#F4EFFC") } // canvas
-    var accent: Color         { Color(hex: "#E9A8D0") } // CTA / highlights
-    var accentStrong: Color   { Color(hex: "#4A3A6B") } // toggles / contrast
-
-    var textPrimary: Color    { Color(hex: "#2B1F4A") } // dark text for readability
-    var textSecondary: Color  { Color(hex: "#4A3A6B") } // softer text
-    var shadow: Color         { Color(hex: "#C4B1E6").opacity(0.3) }
+    // Base Colors
+    var primary: Color        { Color(hex: "#7C64B2") }  // Lavender – main branding, headers
+    var secondary: Color      { Color(hex: "#D9C8F0") }  // Pale lilac – supporting UI, cards
+    var background: Color     { Color(hex: "#EDE8F7") }  // Soft lavender mist – background canvas
+    
+    // Accents
+    var accent: Color         { Color(hex: "#E9A8D0") }  // Soft rose pink – emotional highlights, accent buttons
+    var accentStrong: Color   { Color(hex: "#D881A3") }  // Deeper rose – pressed states, strong CTAs
+    
+    // Text
+    var textPrimary: Color    { Color(hex: "#5D4E7B") }  // Deep muted plum – readability for main text
+    var textSecondary: Color  { Color(hex: "#7B6C9F") }  // Softer lavender-plum – for secondary labels
+    
+    // Shadow
+    var shadow: Color         { Color(hex: "#7C64B2").opacity(0.15) } // Soft lavender shadow for depth
 }
 
 // MARK: - Theme Manager

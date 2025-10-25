@@ -12,29 +12,89 @@ struct VisionBoardGalleryView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(spacing: 20) {
-                    ForEach(templateManager.templates) { template in
-                        NavigationLink(destination: VisionBoardTemplateDetailView(template: template)) {
-                            TemplateCardView(template: template)
+            ZStack {
+                // Main background
+                theme.background
+                    .ignoresSafeArea()
+
+                VStack(spacing: 0) {
+                    // Header section with secondary background
+                    VStack(spacing: 16) {
+                        // Header with title
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Vision Boards")
+                                    .font(.appLogo)
+                                    .foregroundColor(theme.textPrimary)
+
+                                Text("Choose Your Dreams")
+                                    .font(.appCaption)
+                                    .foregroundColor(theme.textSecondary)
+                            }
+
+                            Spacer()
+                            
+                            // My Boards button
+                            NavigationLink(destination: MyBoardsView()) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "folder")
+                                        .font(.system(size: 14, weight: .medium))
+                                    
+                                    Text("My Boards")
+                                        .font(.appCaption)
+                                        .fontWeight(.medium)
+                                }
+                                .foregroundColor(theme.accent)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(theme.accent.opacity(0.1))
+                                )
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
-                        .buttonStyle(PlainButtonStyle())
+                        .padding(.top, 8)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
+                    .background(
+                        GeometryReader { geometry in
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    theme.secondary.opacity(0.1),
+                                    theme.secondary.opacity(0.05),
+                                    theme.background
+                                ]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                        }
+                        .ignoresSafeArea(.all, edges: .top)
+                    )
+
+                    // Content
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack(spacing: 20) {
+                            ForEach(templateManager.templates) { template in
+                                NavigationLink(destination: VisionBoardTemplateDetailView(template: template)) {
+                                    TemplateCardView(template: template)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
             }
-            .background(theme.background)
-            .navigationTitle("Vision Boards")
-            .font(.appLogo)
-            .foregroundColor(theme.textPrimary)
         }
     }
 }
 
 struct TemplateCardView: View {
     let template: VisionBoardTemplate
-    @State private var isPressed = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -48,12 +108,12 @@ struct TemplateCardView: View {
                         // Multi-layer background for depth with better contrast
                         RoundedRectangle(cornerRadius: 16)
                             .fill(theme.background)
-                            .shadow(color: theme.shadow.opacity(0.4), radius: 10, x: 0, y: 5)
+                            .shadow(color: theme.shadow, radius: 10, x: 0, y: 5)
                     )
                     .overlay(
                         // More visible border for template preview
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(theme.shadow.opacity(0.2), lineWidth: 1.5)
+                            .stroke(theme.shadow, lineWidth: 1.5)
                     )
                     .clipped()
                 Spacer()
@@ -84,45 +144,26 @@ struct TemplateCardView: View {
         .background(
             // Enhanced card background with stronger contrast
             RoundedRectangle(cornerRadius: 20)
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            theme.background,
-                            theme.secondary.opacity(0.15)
-                        ]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .fill(theme.secondary)
                 .overlay(
                     // More visible border for better definition
                     RoundedRectangle(cornerRadius: 20)
-                        .stroke(theme.shadow.opacity(0.25), lineWidth: 1.5)
+                        .stroke(theme.shadow, lineWidth: 1.5)
                 )
         )
         .frame(maxWidth: .infinity)
-        .scaleEffect(isPressed ? 0.98 : 1.0)
         .shadow(
-            color: theme.shadow.opacity(0.15),
-            radius: isPressed ? 12 : 20,
+            color: theme.shadow,
+            radius: 20,
             x: 0,
-            y: isPressed ? 6 : 10
+            y: 10
         )
         .shadow(
-            color: theme.shadow.opacity(0.08),
-            radius: isPressed ? 6 : 8,
+            color: theme.shadow,
+            radius: 8,
             x: 0,
-            y: isPressed ? 3 : 4
+            y: 4
         )
-        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
-        .onTapGesture {
-            // Haptic feedback for better UX
-            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-            impactFeedback.impactOccurred()
-        }
-        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
-            isPressed = pressing
-        }, perform: {})
     }
 }
 

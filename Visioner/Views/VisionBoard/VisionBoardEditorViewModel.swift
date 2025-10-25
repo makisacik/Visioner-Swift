@@ -20,6 +20,7 @@ final class VisionBoardEditorViewModel: ObservableObject {
     @Published var editingText = ""
     @Published var selectedImageItem: PhotosPickerItem?
     @Published var isSaving = false
+    @Published var selectedSlotForSheet: SlotContentEntity?
     
     // MARK: - Private Properties
     
@@ -53,6 +54,7 @@ final class VisionBoardEditorViewModel: ObservableObject {
     /// Select a slot for editing
     func selectSlot(_ slotId: Int) {
         selectedSlotId = slotId
+        selectedSlotForSheet = selectedSlot
         showingBottomSheet = true
         
         // Set up text editing if it's a text slot
@@ -61,14 +63,14 @@ final class VisionBoardEditorViewModel: ObservableObject {
         }
         
         // Haptic feedback
-        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-        impactFeedback.impactOccurred()
+        HapticFeedbackService.shared.provideFeedback(.selection)
     }
     
     /// Dismiss the bottom sheet
     func dismissBottomSheet() {
         showingBottomSheet = false
         selectedSlotId = nil
+        selectedSlotForSheet = nil
         editingText = ""
         selectedImageItem = nil
     }
@@ -94,8 +96,7 @@ final class VisionBoardEditorViewModel: ObservableObject {
         refreshBoard()
         
         // Haptic feedback for save
-        let notificationFeedback = UINotificationFeedbackGenerator()
-        notificationFeedback.notificationOccurred(.success)
+        HapticFeedbackService.shared.provideFeedback(.success)
         
         dismissBottomSheet()
     }
@@ -159,8 +160,7 @@ final class VisionBoardEditorViewModel: ObservableObject {
                         self?.refreshBoard()
                         
                         // Haptic feedback for image save
-                        let notificationFeedback = UINotificationFeedbackGenerator()
-                        notificationFeedback.notificationOccurred(.success)
+                        HapticFeedbackService.shared.provideFeedback(.success)
                         
                         self?.dismissBottomSheet()
                     }
@@ -171,7 +171,7 @@ final class VisionBoardEditorViewModel: ObservableObject {
         }
     }
     
-    private func refreshBoard() {
+    func refreshBoard() {
         // Refresh the board from Core Data to get the latest changes
         if let boardId = board.id, let updatedBoard = visionBoardService.fetchBoard(withId: boardId) {
             Task { @MainActor in

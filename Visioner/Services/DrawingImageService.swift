@@ -62,7 +62,34 @@ struct DrawingImageService {
         // Configure for high quality
         renderer.scale = UIScreen.main.scale
         
-        return renderer.uiImage
+        guard let uiImage = renderer.uiImage else { return nil }
+
+        // Convert to opaque image to avoid alpha channel issues
+        return createOpaqueImage(from: uiImage)
+    }
+
+    /// Convert an image with alpha channel to an opaque image to optimize file size and memory usage
+    private static func createOpaqueImage(from image: UIImage) -> UIImage {
+        let size = image.size
+        let scale = image.scale
+
+        // Create a graphics context with opaque background
+        UIGraphicsBeginImageContextWithOptions(size, true, scale)
+        defer { UIGraphicsEndImageContext() }
+
+        // Fill with white background for heart drawings
+        UIColor.white.setFill()
+        UIRectFill(CGRect(origin: .zero, size: size))
+
+        // Draw the original image on top
+        image.draw(in: CGRect(origin: .zero, size: size))
+
+        // Get the opaque image
+        guard let opaqueImage = UIGraphicsGetImageFromCurrentImageContext() else {
+            return image // Fallback to original if conversion fails
+        }
+
+        return opaqueImage
     }
     
     /// Retrieves the saved heart drawing image
